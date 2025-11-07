@@ -1,10 +1,12 @@
 import React, { use } from "react";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../context/Context";
 
 const Login = () => {
-  const { loginUser } = use(AuthContext);
-  //   console.log(loginUser);
+  const { loginUser, signInWithGoogle } = use(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
   const handleSubmit = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
@@ -13,6 +15,18 @@ const Login = () => {
     loginUser(email, password)
       .then((result) => {
         console.log(result);
+        navigate(location?.state || "/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleLoginWithGoogle = () => {
+    signInWithGoogle()
+      .then((result) => {
+        console.log(result);
+        navigate(location?.state || "/");
       })
       .catch((error) => {
         console.log(error);
@@ -48,6 +62,9 @@ const Login = () => {
               Register
             </Link>
           </p>
+          <button onClick={handleLoginWithGoogle} className="btn">
+            Login in With Google
+          </button>
         </form>
       </div>
     </div>
